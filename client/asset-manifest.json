@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/codestates-bithumb-frontend/static/css/main.aca9ac15.css",
+    "main.js": "/codestates-bithumb-frontend/static/js/main.b54ff138.js",
+    "static/js/787.203463b0.chunk.js": "/codestates-bithumb-frontend/static/js/787.203463b0.chunk.js",
+    "index.html": "/codestates-bithumb-frontend/index.html",
+    "main.aca9ac15.css.map": "/codestates-bithumb-frontend/static/css/main.aca9ac15.css.map",
+    "main.b54ff138.js.map": "/codestates-bithumb-frontend/static/js/main.b54ff138.js.map",
+    "787.203463b0.chunk.js.map": "/codestates-bithumb-frontend/static/js/787.203463b0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.aca9ac15.css",
+    "static/js/main.b54ff138.js"
+  ]
+}
