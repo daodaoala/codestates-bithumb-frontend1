@@ -281,15 +281,19 @@ const Market = () => {
                                             </TableCell>
                                             {data.fluctate_rate_24H > 0 ? (
                                                 <TableCell className= "color_red" align="right"  style={{ width: "30%"}}>
-                                                    {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                    (+{data.fluctate_rate_24H} %)
-                                                    <ArrowDropUpIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        (+{data.fluctate_rate_24H} %)
+                                                        <ArrowDropUpIcon />
+                                                    </Box>
                                                 </TableCell>
                                             ) : (
                                                 <TableCell className="color_blu" align="right"  style={{ width: "30%"}}>
-                                                    {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                    ({data.fluctate_rate_24H} %)
-                                                    <ArrowDropDownIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        ({data.fluctate_rate_24H} %)
+                                                        <ArrowDropDownIcon />
+                                                    </Box>
                                                 </TableCell>
                                             )}
                                             <TableCell align="right"  style={{ width: "20%"}}>
@@ -367,16 +371,20 @@ const Market = () => {
                                                     {data.closing_price  && getValue(data.closing_price, 'price')} 원
                                                 </TableCell>
                                                 {data.fluctate_rate_24H > 0 ? (
-                                                    <TableCell className= "color_red" align="right" style={{ width: "30%"}}>
-                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                        (+{data.fluctate_rate_24H} %)
-                                                        <ArrowDropUpIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <TableCell className= "color_red" align="right"  style={{ width: "30%"}}>
+                                                        <Box display="flex" justifyContent="flex-end">
+                                                            {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                            (+{data.fluctate_rate_24H} %)
+                                                            <ArrowDropUpIcon />
+                                                        </Box>
                                                     </TableCell>
                                                 ) : (
-                                                    <TableCell className="color_blu" align="right" style={{ width: "20%"}}>
-                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                        ({data.fluctate_rate_24H} %)
-                                                        <ArrowDropDownIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <TableCell className="color_blu" align="right"  style={{ width: "30%"}}>
+                                                        <Box display="flex" justifyContent="flex-end">
+                                                            {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                            ({data.fluctate_rate_24H} %)
+                                                            <ArrowDropDownIcon />
+                                                        </Box>
                                                     </TableCell>
                                                 )}
                                                 <TableCell align="right" style={{ width: "20%"}}>
