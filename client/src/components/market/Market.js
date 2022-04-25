@@ -6,7 +6,6 @@ import clsx from 'clsx';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -25,6 +24,7 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import MovingIcon from '@mui/icons-material/Moving';
 import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
+import Top5Market from './Top5Market'
 import coins from './Coins';
 import './../../App.css';
 
@@ -70,7 +70,6 @@ const Market = () => {
     const [favoriteIcon, setFavoriteIcon] = useState([]);   // 즐겨찾기 아이콘 리스트
     const [tickers, setTickers] = useState([]);             // api로 받아온 KRW 데이터 리스트 객체
     const [tickerList, setTickerList] = useState([]);       // api로 받아온 KRW 데이터 리스트 객체 -> 배열
-	const [topFiveList, setTopFiveList] = useState([]);     // TOP 5 리스트   
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     let history = useHistory();
@@ -98,10 +97,6 @@ const Market = () => {
         }
 	}, [tickers])
 
-    useEffect(() => {
-		getTopFiveTickers(tickerList)
-	}, [tickerList])
-
     //코인 시세 호출 API
     async function getTickers() {
         try {
@@ -119,13 +114,6 @@ const Market = () => {
     const createArr = ( tickers, setTickerList ) => {
         setTickerList(Object.keys(tickers).map((name) => ({name, ...tickers[name]})));
     }
-
-    // Top 5 마켓 변동률 리스트 구하기
-    const getTopFiveTickers = ( tickerList ) => {
-        // const fiveTicker = [...tickerList].sort((a,b) => Math.abs(b.fluctate_rate_24H) - Math.abs(a.fluctate_rate_24H)).splice(0, 5)
-        const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
-		setTopFiveList(fiveTicker)
-	}
 
     // 즐겨찾기 실시간 시세 업데이트
     const updateFavoriteList = ( tickerList, favoriteIcon ) => {
@@ -161,15 +149,6 @@ const Market = () => {
         }
     }
 
-    const getCoinName = (value) => {
-        // var coin = coins.filter( function (o) {
-        //     // console.log(o.symbol, value)
-        //     return o.symbol === value
-        // })
-        // console.log("coin",coin)
-        // return coin[0].name
-    }
-
     return (
         <>
             <Box>
@@ -178,34 +157,7 @@ const Market = () => {
                     <Box className={clsx('top5_market_tab1', marketBtn===1 && 'click_top5_market')} onClick={()=>setMarketBtn(1)}>원화 마켓</Box>
                     <Box className={clsx('top5_market_tab2', marketBtn===2 && 'click_top5_market')}  onClick={()=>setMarketBtn(2)}>BTC 마켓</Box>
                 </Box>
-                <Box className='top5-content-wrap'>
-                    <Grid container spacing={1}>
-                        {topFiveList && topFiveList.map((data,i) => (
-                            <Grid item xs={2.4}>
-                                <Paper>
-                                    <Box className='top5_name'>{data.name}</Box>
-                                    { data.fluctate_rate_24H > 0 ? (
-                                        <>
-                                            <Box className={clsx('top5_price', 'color_red')}>{data.closing_price && getValue( data.closing_price , 'price' )}</Box>
-                                            <Box className={clsx('top5_rate', 'color_red')}>
-                                                <ArrowDropDownIcon style={{ margin: "8px 0 -8px", fontSize:"27px" }}/>
-                                                + {data.fluctate_rate_24H} %
-                                            </Box>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Box className={clsx('top5_price', 'color_blu')}>{data.closing_price && getValue( data.closing_price , 'price' )}</Box>
-                                            <Box className={clsx('top5_rate', 'color_blu')}>
-                                                <ArrowDropDownIcon style={{ margin: "8px 0 -8px", fontSize:"27px" }}/>
-                                                 {data.fluctate_rate_24H} %
-                                            </Box>
-                                        </>
-                                    )}
-                                </Paper>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Box>
+                <Top5Market tickerList={tickerList}/>
                 <Box display="flex" justifyContent="space-between" sx={{ width:"1200px"}}>
                     <Box>
                         <Box className={clsx('tab_market', value===1 && 'click_tab_market')} onClick={()=>setValue(1)}>원화 마켓</Box>
@@ -232,9 +184,9 @@ const Market = () => {
                     <Box display="flex" p="16px 0">
                         <Box className={clsx('price_head', headValue===1 && 'click_price_head')} onClick={()=>setHeadValue(1)}>전체 {tickerList.length}</Box>
                         <Box className={clsx('price_head', headValue===2 && 'click_price_head')} onClick={()=>setHeadValue(2)}>메이저 10</Box>
-                        <Box className={clsx('price_head', headValue===3 && 'click_price_head')} onClick={()=>setHeadValue(3)}>일반 175</Box>
-                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 6</Box>
-                        <Box className={clsx('price_head', headValue===5 && 'click_price_head')} onClick={()=>setHeadValue(5)}>투자유의 7</Box>
+                        <Box className={clsx('price_head', headValue===3 && 'click_price_head')} onClick={()=>setHeadValue(3)}>일반 178</Box>
+                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 4</Box>
+                        <Box className={clsx('price_head', headValue===5 && 'click_price_head')} onClick={()=>setHeadValue(5)}>투자유의 8</Box>
                     </Box>
                     <TableContainer className="scroll-head" sx={{ maxHeight: 700, maxWidth: 1200 }}>
                         <Table stickyHeader aria-label="sticky table" size="small">
