@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import clsx from 'clsx';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import Grid from '@mui/material/Grid';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -24,6 +24,8 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import MovingIcon from '@mui/icons-material/Moving';
 import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Top5Market from './Top5Market'
 import coins from './Coins';
 import './../../App.css';
 
@@ -64,21 +66,21 @@ const Market = () => {
     const [headValue, setHeadValue] = useState(1);
     const [time, setTime] = useState(2);                    // 변동률 select
     const [search, setSearch] = useState();                 // 검색어
+    const [searchList, setSearchList] = useState([]);       // 검색어 리스트
     const [favorites, setFavorites] = useState([]);         // 즐겨찾기한 코인 리스트
     const [favoriteIcon, setFavoriteIcon] = useState([]);   // 즐겨찾기 아이콘 리스트
     const [tickers, setTickers] = useState([]);             // api로 받아온 KRW 데이터 리스트 객체
     const [tickerList, setTickerList] = useState([]);       // api로 받아온 KRW 데이터 리스트 객체 -> 배열
-	const [topFiveList, setTopFiveList] = useState([]);     // TOP 5 리스트
-    const [total, setTotal] = useState();   
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    let history = useHistory();
   
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = ( newPage ) => {
       setPage(newPage);
     };
   
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(+event.target.value);
+    const handleChangeRowsPerPage = ( event ) => {
+      setRowsPerPage( +event.target.value );
       setPage(0);
     };    
 
@@ -86,41 +88,48 @@ const Market = () => {
         getTickers();
         setInterval(() => {
             getTickers();
-        }, 3000);
+        }, 6000);
     }, [])
 
 	useEffect(() => {
 		createArr(tickers, setTickerList)
+        if(favorites.length){
+            updateFavoriteList(tickerList, favoriteIcon)
+        }
 	}, [tickers])
 
-    useEffect(() => {
-		getTopFiveTickers(tickerList)
-	}, [tickerList])
+    // 검색 기능
+	useEffect(() => {
+        setSearchList(tickerList.filter((data)=> data.name.includes(search.toUpperCase())))
+    }, [search])
+
 
     //코인 시세 호출 API
     async function getTickers() {
         try {
-            const response = await axios.get('https://api.bithumb.com/public/ticker/ALL_KRW');
+            const orderCurrency = 'ALL';
+            const paymentCurrency = 'KRW';
+            const response = await axios.get(`https://api.bithumb.com/public/ticker/${orderCurrency}_${paymentCurrency}`);
             delete response.data.data.date;
             setTickers(response.data.data)
         } catch (e) {
             console.log("에러", e);
         }
     }
-
+  
     //객체 배열로 변환
-    const createArr = (tickers, setTickerList) => {
+    const createArr = ( tickers, setTickerList ) => {
         setTickerList(Object.keys(tickers).map((name) => ({name, ...tickers[name]})));
     }
 
-    const getTopFiveTickers = (tickerList) => {
-        // const fiveTicker = [...tickerList].sort((a,b) => Math.abs(b.fluctate_rate_24H) - Math.abs(a.fluctate_rate_24H)).splice(0, 5)
-        const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
-		setTopFiveList(fiveTicker)
-	}
+    // 즐겨찾기 실시간 시세 업데이트
+    const updateFavoriteList = ( tickerList, favoriteIcon ) => {
+        const favoriteList = tickerList.filter(obj => favoriteIcon.includes(obj.name))
+        setFavorites(favoriteList)
+    }
 
     //즐겨찾기 추가 및 해제
-    function includeFavorites(data, name) {
+    function includeFavorites( data, name ) {
         console.log("즐겨찾기", data, name)
         if( !favoriteIcon.includes(name) ) {
             setFavoriteIcon([...favoriteIcon, name])
@@ -130,69 +139,27 @@ const Market = () => {
             setFavoriteIcon(favoriteIcon.filter(icon => icon !== name));
             setFavorites(favorites.filter(favorites => favorites.name !== name));
         }
-        console.log("즐겨찾기 목록",favorites)
     }
 
     // 유형에 따라 값 형식표시
     const getValue = (value, type) => {
         try {
             if( type === 'price') {
-                return parseInt(value).toFixed(0).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+                return value.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
             } else if ( type === 'fluctate' ) {
                 return value.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-            } else if ( type === 'top_price' ) {
-                return value.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+            } else if ( type === 'trade_price' ) {
+                return parseInt(value).toFixed(0).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
             }
         } catch (e) {
             return '';
         }
     }
 
-    const getCoinName = (value) => {
-        // var coin = coins.filter( function (o) {
-        //     // console.log(o.symbol, value)
-        //     return o.symbol === value
-        // })
-        // console.log("coin",coin)
-        // return coin[0].name
-    }
-
     return (
         <>
             <Box>
-                <Box display="flex" justifyContent="center" style={{padding:"36px 0 10px", textAlign:"center"}}>
-                    <Box className='top5_area'>마켓 변동률 TOP5</Box>
-                    <Box className='top5_market_tab1' mt="2px">원화 마켓</Box>
-                    <Box className='top5_market_tab2' mt="2px">BTC 마켓</Box>
-                </Box>
-                <Box className='top5-content-wrap'>
-                    <Grid container spacing={1}>
-                        {topFiveList && topFiveList.map((data,i) => (
-                            <Grid item xs={2.4}>
-                                <Paper>
-                                    <Box className='top5_name'>{data.name}</Box>
-                                    { data.fluctate_rate_24H > 0 ? (
-                                        <>
-                                            <Box className={clsx('top5_price', 'color_red')}>{data.closing_price && getValue( data.closing_price , 'top_price' )}</Box>
-                                            <Box className={clsx('top5_rate', 'color_red')}>
-                                                <ArrowDropDownIcon style={{ margin: "8px 0 -8px", fontSize:"27px" }}/>
-                                                + {data.fluctate_rate_24H} %
-                                            </Box>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Box className={clsx('top5_price', 'color_blu')}>{data.closing_price && getValue( data.closing_price , 'top_price' )}</Box>
-                                            <Box className={clsx('top5_rate', 'color_blu')}>
-                                                <ArrowDropDownIcon style={{ margin: "8px 0 -8px", fontSize:"27px" }}/>
-                                                 {data.fluctate_rate_24H} %
-                                            </Box>
-                                        </>
-                                    )}
-                                </Paper>
-                            </Grid>
-                        ))}
-                    </Grid>
-                </Box>
+                <Top5Market tickerList={tickerList}/>
                 <Box display="flex" justifyContent="space-between" sx={{ width:"1200px"}}>
                     <Box>
                         <Box className={clsx('tab_market', value===1 && 'click_tab_market')} onClick={()=>setValue(1)}>원화 마켓</Box>
@@ -210,6 +177,7 @@ const Market = () => {
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={(e)=>setSearch(e.target.value)}
                             />
+                            {/* <CancelIcon /> */}
                         </Search>
                     </Box>
                 </Box>
@@ -219,9 +187,9 @@ const Market = () => {
                     <Box display="flex" p="16px 0">
                         <Box className={clsx('price_head', headValue===1 && 'click_price_head')} onClick={()=>setHeadValue(1)}>전체 {tickerList.length}</Box>
                         <Box className={clsx('price_head', headValue===2 && 'click_price_head')} onClick={()=>setHeadValue(2)}>메이저 10</Box>
-                        <Box className={clsx('price_head', headValue===3 && 'click_price_head')} onClick={()=>setHeadValue(3)}>일반 175</Box>
-                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 6</Box>
-                        <Box className={clsx('price_head', headValue===5 && 'click_price_head')} onClick={()=>setHeadValue(5)}>투자유의 7</Box>
+                        <Box className={clsx('price_head', headValue===3 && 'click_price_head')} onClick={()=>setHeadValue(3)}>일반 178</Box>
+                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 4</Box>
+                        <Box className={clsx('price_head', headValue===5 && 'click_price_head')} onClick={()=>setHeadValue(5)}>투자유의 8</Box>
                     </Box>
                     <TableContainer className="scroll-head" sx={{ maxHeight: 700, maxWidth: 1200 }}>
                         <Table stickyHeader aria-label="sticky table" size="small">
@@ -254,33 +222,86 @@ const Market = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody id="table_asset">
-                                {tickerList && tickerList.map((data, i)=>(
+                                {search ? (
+                                    searchList && searchList.map((data, i)=>(
+                                    <>
+                                        <TableRow key={data.id}>
+                                            <TableCell align="left" style={{ width: "4px"}} >
+                                                <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
+                                            </TableCell>
+                                            <TableCell align="left" onClick={()=>history.push("/trade/order/BTC_KRW")}>
+                                                {data.name}
+                                            </TableCell>
+                                            <TableCell align="right" style={{ width: "20%"}}>
+                                                {data.closing_price  && getValue(data.closing_price, 'price')} 원
+                                            </TableCell>
+                                            {data.fluctate_rate_24H > 0 ? (
+                                                <TableCell className= "color_red" align="right"  style={{ width: "30%"}}>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        (+{data.fluctate_rate_24H} %)
+                                                        <ArrowDropUpIcon />
+                                                    </Box>
+                                                </TableCell>
+                                            ) : (
+                                                <TableCell className="color_blu" align="right"  style={{ width: "30%"}}>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        ({data.fluctate_rate_24H} %)
+                                                        <ArrowDropDownIcon />
+                                                    </Box>
+                                                </TableCell>
+                                            )}
+                                            <TableCell align="right"  style={{ width: "20%"}}>
+                                                ≈ {data.acc_trade_value_24H && getValue(data.acc_trade_value_24H, 'trade_price')} 원
+                                            </TableCell>
+                                            <TableCell align="center" style={{ width: "5%"}}>
+                                                <VerticalAlignBottomIcon style={{color:"#46C0E9", width:"18px"}}/>
+                                            </TableCell>
+                                            <TableCell align="center" style={{ width: "5%"}}>
+                                                <VerticalAlignTopIcon style={{color:"#46C0E9", width:"18px"}}/>
+                                            </TableCell>
+                                            <TableCell align="center" style={{ width: "5%"}}>
+                                                <MovingIcon style={{color:"#46C0E9", width:"18px"}}/>
+                                            </TableCell>
+                                            <TableCell align="center" style={{ width: "5%"}}>
+                                                <SyncAltIcon style={{color:"#46C0E9", width:"18px"}}/>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
+                                ))
+                                ) : ( 
+                                    tickerList && tickerList.map((data, i)=>(
                                     <>
                                       <TableRow key={data.id}>
                                             <TableCell align="left" style={{ width: "4px"}} >
                                                 <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="left" onClick={()=>history.push("/trade/order/BTC_KRW")}>
                                                 {data.name}
                                             </TableCell>
-                                            <TableCell align="right">
+                                            <TableCell align="right" style={{ width: "20%"}}>
                                                 {data.closing_price  && getValue(data.closing_price, 'price')} 원
                                             </TableCell>
                                             {data.fluctate_rate_24H > 0 ? (
-                                                <TableCell className= "color_red" align="right" >
-                                                    {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                    (+{data.fluctate_rate_24H} %)
-                                                    <ArrowDropUpIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                <TableCell className= "color_red" align="right"  style={{ width: "30%"}}>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        (+{data.fluctate_rate_24H} %)
+                                                        <ArrowDropUpIcon />
+                                                    </Box>
                                                 </TableCell>
                                             ) : (
-                                                <TableCell className="color_blu" align="right" >
-                                                    {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                    ({data.fluctate_rate_24H} %)
-                                                    <ArrowDropDownIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                <TableCell className="color_blu" align="right"  style={{ width: "30%"}}>
+                                                    <Box display="flex" justifyContent="flex-end">
+                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                        ({data.fluctate_rate_24H} %)
+                                                        <ArrowDropDownIcon />
+                                                    </Box>
                                                 </TableCell>
                                             )}
-                                            <TableCell align="right" >
-                                                ≈ {data.acc_trade_value_24H && getValue(data.acc_trade_value_24H, 'price')} 원
+                                            <TableCell align="right"  style={{ width: "20%"}}>
+                                                ≈ {data.acc_trade_value_24H && getValue(data.acc_trade_value_24H, 'trade_price')} 원
                                             </TableCell>
                                             <TableCell align="center" style={{ width: "5%"}}>
                                                 <VerticalAlignBottomIcon style={{color:"#46C0E9", width:"18px"}}/>
@@ -296,7 +317,7 @@ const Market = () => {
                                             </TableCell>
                                       </TableRow>
                                     </>
-                                ))}
+                                )))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -350,24 +371,28 @@ const Market = () => {
                                                 <TableCell align="left">
                                                     {data.name}
                                                 </TableCell>
-                                                <TableCell align="right">
+                                                <TableCell align="right" style={{ width: "20%"}}>
                                                     {data.closing_price  && getValue(data.closing_price, 'price')} 원
                                                 </TableCell>
                                                 {data.fluctate_rate_24H > 0 ? (
-                                                    <TableCell className= "color_red" align="right" >
-                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                        (+{data.fluctate_rate_24H} %)
-                                                        <ArrowDropUpIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <TableCell className= "color_red" align="right"  style={{ width: "30%"}}>
+                                                        <Box display="flex" justifyContent="flex-end">
+                                                            {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                            (+{data.fluctate_rate_24H} %)
+                                                            <ArrowDropUpIcon />
+                                                        </Box>
                                                     </TableCell>
                                                 ) : (
-                                                    <TableCell className="color_blu" align="right" >
-                                                        {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
-                                                        ({data.fluctate_rate_24H} %)
-                                                        <ArrowDropDownIcon style={{margin:"8px 0 -8px", fontSize:"27px"}}/>
+                                                    <TableCell className="color_blu" align="right"  style={{ width: "30%"}}>
+                                                        <Box display="flex" justifyContent="flex-end">
+                                                            {data.fluctate_24H && getValue(data.fluctate_24H, 'fluctate')} 원 
+                                                            ({data.fluctate_rate_24H} %)
+                                                            <ArrowDropDownIcon />
+                                                        </Box>
                                                     </TableCell>
                                                 )}
-                                                <TableCell align="right" >
-                                                    ≈ {data.acc_trade_value_24H && getValue(data.acc_trade_value_24H, 'price')} 원
+                                                <TableCell align="right" style={{ width: "20%"}}>
+                                                    ≈ {data.acc_trade_value_24H && getValue(data.acc_trade_value_24H, 'trade_price')} 원
                                                 </TableCell>
                                                 <TableCell align="center" style={{ width: "5%"}}>
                                                     <VerticalAlignBottomIcon style={{color:"#46C0E9", width:"18px"}}/>
@@ -403,6 +428,7 @@ const Market = () => {
                         />
                     </Paper>
                 )}
+
             </Box>
         </>
     );

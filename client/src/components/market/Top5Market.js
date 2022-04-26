@@ -9,6 +9,7 @@ import './../../App.css';
 
 
 const Top5Market = ( {tickerList} ) => {
+    const [marketBtn, setMarketBtn] = useState(1);          // 원화마켓 / BTC마켓 버튼
 	const [topFiveList, setTopFiveList] = useState([]);     // TOP 5 리스트   
 
     useEffect(() => {
@@ -35,7 +36,12 @@ const Top5Market = ( {tickerList} ) => {
 
     return (
         <>
-           <Box className='top5-content-wrap'>
+            <Box display="flex" justifyContent="center" style={{padding:"36px 0 10px", textAlign:"center"}}>
+                <Box className='top5_area'>마켓 변동률 TOP5</Box>
+                <Box className={clsx('top5_market_tab1', marketBtn===1 && 'click_top5_market')} onClick={()=>setMarketBtn(1)}>원화 마켓</Box>
+                <Box className={clsx('top5_market_tab2', marketBtn===2 && 'click_top5_market')}  onClick={()=>setMarketBtn(2)}>BTC 마켓</Box>
+            </Box>       
+            <Box className='top5-content-wrap'>
                 <Grid container spacing={1}>
                     {topFiveList && topFiveList.map((data,i) => (
                         <Grid item xs={2.4}>
