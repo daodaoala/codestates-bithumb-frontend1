@@ -26,8 +26,8 @@ import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
 import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Top5Market from './Top5Market'
-import Favorite from './Favorite'
-import coins from './Coins';
+import BTCMarket from './BTCMarket'
+import {coinName} from './Coins';
 import './../../App.css';
 
 const Search = styled('div')(({ theme }) => ({
@@ -63,6 +63,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const Market = () => {
+    // const [state, setState] = useState(
+    //     () => JSON.parse(window.localStorage.getItem("favorites")));
     const [value, setValue] = useState(1);
     const [headValue, setHeadValue] = useState(1);
     const [time, setTime] = useState(2);                        // 변동률 select
@@ -92,6 +94,7 @@ const Market = () => {
         }, 3000);
     }, [])
 
+    // console.log("state",state)
 	useEffect(() => {
 		createArr(tickers, setTickerList)
         if(favorites.length){
@@ -141,6 +144,7 @@ const Market = () => {
         if( !favoriteIcon.includes(name) ) {
             setFavoriteIcon([...favoriteIcon, name])
             setFavorites([...favorites, data])
+            // window.localStorage.setItem("favorites", data);
         }
         else {
             setFavoriteIcon(favoriteIcon.filter(icon => icon !== name));
@@ -189,7 +193,7 @@ const Market = () => {
                     </Box>
                 </Box>
 
-                { value !== 4 && (
+                { (value !== 4 && value !== 2)  && (
                 <Paper style={{width:"1200px" ,borderTop:"1px solid #F2F2F2", margin:"0 0 70px 0" }}>
                     <Box display="flex" p="16px 0">
                         <Box className={clsx('price_head', headValue===1 && 'click_price_head')} onClick={()=>setHeadValue(1)}>전체 {tickerList.length}</Box>
@@ -230,9 +234,9 @@ const Market = () => {
                             </TableHead>
                             <TableBody id="table_asset">
                                 {search ? (
-                                    searchList && searchList.map((data, i)=>(
+                                    searchList && searchList.map((data)=>(
                                     <>
-                                        <TableRow key={data.id}>
+                                        <TableRow key="{data}">
                                             <TableCell align="left" style={{ width: "4px"}} >
                                                 <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                             </TableCell>
@@ -278,9 +282,9 @@ const Market = () => {
                                     </>
                                 ))
                                 ) : ( 
-                                    tickerList && tickerList.map((data, i)=>(
+                                    tickerList && tickerList.map((data)=>(
                                     <>
-                                      <TableRow key={data.id}>
+                                      <TableRow key="{data}">
                                             <TableCell align="left" style={{ width: "4px"}} >
                                                 <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                             </TableCell>
@@ -331,6 +335,10 @@ const Market = () => {
                 </Paper>
                 )}
 
+                { value === 2 && (
+                    <BTCMarket tickerList={tickerList}/>
+                )}
+
                 {/* 즐겨찾기 */}
                 { value === 4 && (
                     <Paper style={{width:"1200px" ,borderTop:"1px solid #F2F2F2", margin:"0 0 85px 0"}}>
@@ -369,9 +377,9 @@ const Market = () => {
                                     {(rowsPerPage > 0
                                         ? favorites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         : favorites
-                                    ).map((data,i)=>( 
+                                    ).map((data)=>( 
                                        <>
-                                            <TableRow key={data.id}>
+                                            <TableRow key="{data}">
                                                 <TableCell align="left" style={{ width: "4px"}} >
                                                     <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                                 </TableCell>
@@ -419,7 +427,17 @@ const Market = () => {
                                 </TableBody>
                                 ) : (
                                     <>
-                                        <Box sx={{textAligh:"center"}}>즐겨찾기로 등록된 가상자산이 없습니다.</Box>
+                                        <TableRow>
+                                            <TableCell align="left"></TableCell>
+                                            <TableCell align="left"></TableCell>
+                                            <TableCell align="right"></TableCell>
+                                            <TableCell align="right">즐겨찾기한 가상자산이 없습니다.</TableCell>
+                                            <TableCell align="left"></TableCell>
+                                            <TableCell align="center"></TableCell>
+                                            <TableCell align="center"></TableCell>
+                                            <TableCell align="center"></TableCell>
+                                            <TableCell align="center"></TableCell>
+                                        </TableRow>
                                     </>
                                 )}
                             </Table>

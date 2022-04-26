@@ -9,7 +9,6 @@ import Quote from'./Quote';
 import './../../App.css'
 import { Chart1 as ChartJS } from 'chart.js/auto'
 import { Chart1 , Line } from "react-chartjs-2";
-import { PriceChangeSharp } from '@mui/icons-material';
 
 
 const CoinInfo = () => {
@@ -77,7 +76,7 @@ const CoinInfo = () => {
             const data = JSON.parse(evt.data);
             console.log("data",data)
             setTickerList((prevItems) => [...prevItems, data]);
-            setPrice(data.content.openPrice.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'))
+            setPrice(data.content.closePrice.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'))
             setVolumePower(data.content.volumePower)
             setHighPrice(data.content.highPrice.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'))
             setLowPrice(data.content.lowPrice.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'))
@@ -108,13 +107,13 @@ const CoinInfo = () => {
             borderColor: "#FFCD56"
           },
           {
-            label: "저가(당일)",
+            label: "저가(1H)",
             data: lineLowData,
             fill: false,
             borderColor: "#4BC0C0"
           },
           {
-            label: "고가(당일)",
+            label: "고가(1H)",
             data: lineHighData,
             fill: false,
             borderColor: "red"
@@ -156,7 +155,8 @@ const CoinInfo = () => {
                                 ticks: {
                                     display:false 
                                 }
-                            }
+                            },
+                            
                         },
                         plugins: {
                             legend: {
@@ -210,8 +210,8 @@ const CoinInfo = () => {
                             </Box>
                             <Box className='tb_List_R'>
                                 <Box>
-                                    <p>고가(당일)</p>
-                                    <p>저가(당일)</p>
+                                    <p>고가(1H)</p>
+                                    <p>저가(1H)</p>
                                     <p>전일종가</p>
                                 </Box>
                                 <Box>

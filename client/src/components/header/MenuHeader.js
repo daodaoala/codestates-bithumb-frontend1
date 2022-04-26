@@ -77,6 +77,18 @@ const useStyles = makeStyles((theme) => ({
         "& .MuiInputBase-input":{
             padding:"0px",
         }
+    },
+    language_label:{
+        "&.MuiInputLabel-outlined" :{
+            marginTop:"-17px", 
+            fontSize:"12px", 
+            color:"#a4a4a4"
+        }
+    },
+    icon: {
+        margin:"0 35px", 
+        padding:"15px 0 14px", 
+        fontSize:"21px"
     }
 }));
 
@@ -98,7 +110,7 @@ const MenuHeader = () => {
                         <Box className={cls.subMenuLine}>|</Box>
                         <Box className={cls.subMenu}>고객지원</Box>       
                         <FormControl className={cls.language}>
-                            <InputLabel style={{marginTop:"-17px", fontSize:"12px", color:"#a4a4a4"}}>KOR</InputLabel>
+                            <InputLabel className={cls.language_label}>KOR</InputLabel>
                             <Select>
                                 <MenuItem value={10}>ENG</MenuItem>
                             </Select>
@@ -113,7 +125,7 @@ const MenuHeader = () => {
                             <Box className={clsx(cls.menuButton, menu===1 && cls.clickedMenu)} onClick={()=>setMenu(1)}>빗썸캐시</Box>
                             <Box className={clsx(cls.menuButton, menu===2 && cls.clickedMenu)} onClick={()=>setMenu(2)}>상품·서비스</Box>
                             <Box className={clsx(cls.menuButton, menu===3 && cls.clickedMenu)} onClick={()=>setMenu(3)}>제휴·입점</Box>
-                            <Box style={{margin:"0 35px", padding:"15px 0 14px", fontSize:"21px"}}>
+                            <Box className={cls.icon}>
                                 <MenuIcon />
                             </Box>
                         </Box>

@@ -6,6 +6,13 @@ import Grid from '@mui/material/Grid';
 import CoinInfo from './CoinInfo';
 
 const useStyles = makeStyles((theme) => ({
+    root:{
+        flexGrow: 1, 
+        paddingTop:"20px" 
+    },
+    item:{
+        backgrounColor:"#1A2027"
+    },
 
 }));
 
@@ -13,12 +20,12 @@ const Order = () => {
     const cls = useStyles();
 
     return (
-        <Box sx={{ flexGrow: 1, paddingTop:"20px" }}>
+        <Box className={cls.root}>
             <Grid container spacing={1}>
-                <Grid item xs={6} md={3}>
-                    <Paper style={{backgrounColor:"#1A2027"}}></Paper>
+                <Grid item xs={6} md={2}>
+                    <Paper className={cls.item}></Paper>
                 </Grid>
-                <Grid item xs={6} md={9}>
+                <Grid item xs={6} md={10}>
                     <CoinInfo />
                 </Grid>
             </Grid>

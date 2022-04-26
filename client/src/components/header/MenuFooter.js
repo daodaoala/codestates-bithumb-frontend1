@@ -1,10 +1,10 @@
 import React from 'react';
+import clsx from 'clsx';
 import AppBar from "@mui/material/AppBar";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
 const MenuFooter = () => {
-    
     return (
         <>
         <AppBar position="static" className="footerBar">
@@ -15,14 +15,14 @@ const MenuFooter = () => {
                     <Box className="footerInfo">가상자산의 가치 변동으로 인한 손실 발<br/>생 가능성 등을 유념하시어 무리한 투자<br/>는 지양 하십시오.</Box>
                 </Box>
                 <Box>
-                  <Box mb="20px" className="footerTitle">회사정보</Box>
+                  <Box className={clsx("footerTitle","margin_btm_20")}>회사정보</Box>
                   <Box className="footerInfo">회사소개</Box>
                   <Box className="footerInfo">빗썸스토리</Box>
                   <Box className="footerInfo">채용안내</Box>
                   <Box className="footerInfo">재무보고서</Box>
                 </Box>  
                 <Box>
-                  <Box mb="20px" className="footerTitle">고객지원</Box>
+                  <Box className={clsx("footerTitle","margin_btm_20")}>고객지원</Box>
                   <Box className="footerInfo">빗썸 이용안내</Box>
                   <Box className="footerInfo">1:1 문의하기</Box>
                   <Box className="footerInfo">증빙센터</Box>
@@ -34,7 +34,7 @@ const MenuFooter = () => {
                   <Box className="footerInfo1">상장 안내</Box>
                 </Box>   
                 <Box>
-                  <Box mb="20px" className="footerTitle">연락처</Box>
+                  <Box className={clsx("footerTitle","margin_btm_20")}>연락처</Box>
                   <Box className="footerInfo">전화상담 : <b className='color_whi'>1661-5566 (365일 운영시간 08:00~23:00 / 심야긴급상담 : 23:00~08:00)</b></Box>
                   <Box className="footerInfo">상장 문의 : <b className='color_whi'>listing@bithumbcorp.com</b></Box>
                   <Box className="footerInfo">제휴 문의 : <b className='color_whi'>partnership@bithumbcorp.com</b></Box>

@@ -10,6 +10,10 @@ import Box from '@mui/material/Box';
 import './../../App.css'
 
 const useStyles = makeStyles((theme) => ({
+    root:{
+        flexGrow: 1, 
+        width:"360px"
+    },
     main_table_container:{
         maxHeight: "100%",
     },
@@ -40,7 +44,7 @@ const WorldMarket = () => {
     const cls = useStyles();
 
     return (
-        <Box sx={{ flexGrow: 1, width:"360px"}}>
+        <Box className={cls.root}>
           <TableContainer className="scroll-head">
             <Table stickyHeader aria-label="sticky table" className={cls.main_table} size="small">
                 <TableHead>

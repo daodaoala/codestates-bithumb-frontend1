@@ -13,6 +13,7 @@ import './../../App.css'
 const useStyles = makeStyles((theme) => ({
     root: {
         width:"360px", 
+        marginLeft:"130px"
     },
     main_table_container:{
         maxHeight: "100%",
@@ -88,7 +89,7 @@ const Quote = ({openPrice}) => {
         }
     }
     return (
-        <Box className={cls.root} ml="130px">
+        <Box className={cls.root}>
           <TableContainer className="scroll-head" sx={{ maxHeight: 700, maxWidth: 360 }}>
             <Table id="quote" stickyHeader aria-label="sticky table" size="small">
                 <TableHead>
