@@ -94,7 +94,6 @@ const Market = () => {
         }, 3000);
     }, [])
 
-    // console.log("state",state)
 	useEffect(() => {
 		createArr(tickers, setTickerList)
         if(favorites.length){
@@ -104,8 +103,12 @@ const Market = () => {
 
     // 검색 기능
 	useEffect(() => {
-        setSearchList(tickerList.filter((data)=> data.name.includes(search.toUpperCase())))
-        setFavorites(favorites.filter((data)=> data.name.includes(search.toUpperCase())))
+        if(search){
+            setSearchList(tickerList.filter((data)=> data.name.includes(search.toUpperCase())))
+            setFavorites(favorites.filter((data)=> data.name.includes(search.toUpperCase())))
+        } else {
+            setFavorites(tickerList.filter((data) => favoriteIcon.includes(data.name)))
+        }
     }, [search])
 
 
@@ -132,8 +135,7 @@ const Market = () => {
         const favoriteList = tickerList.filter(obj => favoriteIcon.includes(obj.name))
         if( !search ){
             setFavorites(favoriteList)
-        } 
-        else {
+        } else {
             setFavorites(favoriteList.filter((data)=> data.name.includes(search.toUpperCase())))
         }
     }
@@ -374,10 +376,11 @@ const Market = () => {
                                 </TableHead>
                                 {favorites.length ? (
                                 <TableBody id="table_asset">
-                                    {(rowsPerPage > 0
+                                    {/* {(rowsPerPage > 0
                                         ? favorites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        : favorites
-                                    ).map((data)=>( 
+                                        : favorites */}
+                                        {favorites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((data)=>( 
                                        <>
                                             <TableRow key="{data}">
                                                 <TableCell align="left" style={{ width: "4px"}} >
