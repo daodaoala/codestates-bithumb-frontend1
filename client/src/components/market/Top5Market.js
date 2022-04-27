@@ -48,6 +48,7 @@ const Top5Market = ( {tickerList} ) => {
     const getTopFiveTickers = ( tickerList ) => {
         // const fiveTicker = [...tickerList].sort((a,b) => Math.abs(b.fluctate_rate_24H) - Math.abs(a.fluctate_rate_24H)).splice(0, 5)
         const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
+        console.log("fiveTicker",fiveTicker)
 		setTopFiveList(fiveTicker)
 	}
 

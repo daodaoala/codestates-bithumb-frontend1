@@ -159,10 +159,9 @@ const BTCMarket = ( {tickerList} ) => {
                                             </TableCell>
                                         ) : (( (data.fluctate_rate_24H === 0 || data.fluctate_rate_24H === '0.00') ? (
                                                 <TableCell align="right"  style={{ width: "30%"}}>
-                                                    <Box display="flex" justifyContent="flex-end">
+                                                    <Box display="flex" justifyContent="flex-end" mr="28px">
                                                         0.00000000 BTC 
                                                         (0.00 %)
-                                                        <ArrowDropDownIcon />
                                                     </Box>
                                                 </TableCell>
                                             ) : (

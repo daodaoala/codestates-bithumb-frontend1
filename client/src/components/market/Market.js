@@ -27,7 +27,7 @@ import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Top5Market from './Top5Market'
 import BTCMarket from './BTCMarket'
-import {coinName} from './Coins';
+import {coins} from './Coins';
 import './../../App.css';
 
 const Search = styled('div')(({ theme }) => ({
@@ -103,11 +103,12 @@ const Market = () => {
 
     // 검색 기능
 	useEffect(() => {
+        const list = tickerList.filter((data) => favoriteIcon.includes(data.name))
         if(search){
             setSearchList(tickerList.filter((data)=> data.name.includes(search.toUpperCase())))
-            setFavorites(favorites.filter((data)=> data.name.includes(search.toUpperCase())))
+            setFavorites(list.filter((data)=> data.name.includes(search.toUpperCase())))
         } else {
-            setFavorites(tickerList.filter((data) => favoriteIcon.includes(data.name)))
+            setFavorites(list.filter((data) => favoriteIcon.includes(data.name)))
         }
     }, [search])
 
@@ -128,6 +129,14 @@ const Market = () => {
     //객체 배열로 변환
     const createArr = ( tickers, setTickerList ) => {
         setTickerList(Object.keys(tickers).map((name) => ({name, ...tickers[name]})));
+        if(search) {
+            updateSearchList(tickerList)
+        }
+    }
+
+    // 검색 리스트 실시간 시세 업데이트
+    const updateSearchList = ( tickerList ) => {
+        setSearchList(tickerList.filter((data)=> data.name.includes(search.toUpperCase())))
     }
 
     // 즐겨찾기 실시간 시세 업데이트
@@ -146,13 +155,23 @@ const Market = () => {
         if( !favoriteIcon.includes(name) ) {
             setFavoriteIcon([...favoriteIcon, name])
             setFavorites([...favorites, data])
-            // window.localStorage.setItem("favorites", data);
         }
         else {
             setFavoriteIcon(favoriteIcon.filter(icon => icon !== name));
             setFavorites(favorites.filter(favorites => favorites.name !== name));
         }
     }
+
+    const getCoinName = ( data ) => {
+        // console.log("데이터",data)
+        const coin = coins.filter( v => v.symbol === data.name)
+        // data.concat(coin)
+                // console.log("coinName",coin[0].name)
+                        // console.log("coinName",coin.name)
+        // return data
+        // console.log("coinName",coin)
+    }
+    // console.log("tickerList",tickerList)
 
     // 유형에 따라 값 형식표시
     const getValue = (value, type) => {
@@ -291,6 +310,7 @@ const Market = () => {
                                                 <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                             </TableCell>
                                             <TableCell align="left" onClick={()=>history.push("/trade/order/BTC_KRW")}>
+                                                {getCoinName(data)}
                                                 {data.name}
                                             </TableCell>
                                             <TableCell align="right" style={{ width: "20%"}}>
