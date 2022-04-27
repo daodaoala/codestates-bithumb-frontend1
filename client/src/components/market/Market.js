@@ -63,8 +63,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const Market = () => {
-    // const [state, setState] = useState(
-    //     () => JSON.parse(window.localStorage.getItem("favorites")));
     const [value, setValue] = useState(1);
     const [headValue, setHeadValue] = useState(1);
     const [time, setTime] = useState(2);                        // 변동률 select
@@ -77,16 +75,17 @@ const Market = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     let history = useHistory();
-  
-    const handleChangePage = ( event, newPage ) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = ( event ) => {
-      setRowsPerPage( +event.target.value );
-      setPage(0);
-    };    
 
+    useEffect(() => {
+        // localStorage.removeItem("favorite")
+        const data = JSON.parse(localStorage.getItem("favorite") || "[]");
+        if (data) {
+            setFavoriteIcon(data)
+            setFavorites(favoriteIcon.filter(data => tickerList.includes(data)))
+        }
+    }, [])
+
+    console.log("setFavorites",favorites,favoriteIcon)
     useEffect(() => {
         getTickers();
         setInterval(() => {
@@ -151,27 +150,38 @@ const Market = () => {
 
     //즐겨찾기 추가 및 해제
     function includeFavorites( data, name ) {
-        console.log("즐겨찾기", data, name)
         if( !favoriteIcon.includes(name) ) {
             setFavoriteIcon([...favoriteIcon, name])
             setFavorites([...favorites, data])
+            localStorage.setItem('favorite', JSON.stringify([...favoriteIcon, name]));
         }
         else {
             setFavoriteIcon(favoriteIcon.filter(icon => icon !== name));
             setFavorites(favorites.filter(favorites => favorites.name !== name));
+            localStorage.setItem('favorite', JSON.stringify(favoriteIcon));
         }
+        // setFavoriteIcon(JSON.parse(localStorage.getItem('favorite')))
     }
 
-    const getCoinName = ( data ) => {
-        // console.log("데이터",data)
-        const coin = coins.filter( v => v.symbol === data.name)
-        // data.concat(coin)
-                // console.log("coinName",coin[0].name)
-                        // console.log("coinName",coin.name)
-        // return data
-        // console.log("coinName",coin)
-    }
-    // console.log("tickerList",tickerList)
+    // const getCoinName = ( data ) => {
+    //     // console.log("데이터",data)
+    //     const coin = coins.filter( v => v.symbol === data.name)
+    //     // data.concat(coin)
+    //             // console.log("coinName",coin[0].name)
+    //                     // console.log("coinName",coin.name)
+    //     // return data
+    //     // console.log("coinName",coin)
+    // }
+    // // console.log("tickerList",tickerList)
+
+    const handleChangePage = ( event, newPage ) => {
+        setPage(newPage);
+    };
+    
+    const handleChangeRowsPerPage = ( event ) => {
+        setRowsPerPage( +event.target.value );
+        setPage(0);
+    };  
 
     // 유형에 따라 값 형식표시
     const getValue = (value, type) => {
@@ -310,7 +320,7 @@ const Market = () => {
                                                 <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>
                                             </TableCell>
                                             <TableCell align="left" onClick={()=>history.push("/trade/order/BTC_KRW")}>
-                                                {getCoinName(data)}
+                                                {/* {getCoinName(data)} */}
                                                 {data.name}
                                             </TableCell>
                                             <TableCell align="right" style={{ width: "20%"}}>

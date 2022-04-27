@@ -16,16 +16,42 @@ const Top5Market = ( {tickerList} ) => {
 	const [topFiveList, setTopFiveList] = useState([]);     // TOP 5 리스트   
     const [topFiveBtcList, setTopFiveBtcList] = useState([]);     // TOP 5 리스트   
     const [btcList, setBtcList] = useState([]); 
-    const [btcTickerList, setBtcTickerList] = useState([]); 
+    const [btcTickerList, setBtcTickerList] = useState([]);
+    const [chartCoin, setChartCoin] = useState([]);
     const [chartList1, setChartList1] = useState([]); 
+    const [chartList2, setChartList2] = useState([]); 
+    const [chartList3, setChartList3] = useState([]); 
+    const [chartList4, setChartList4] = useState([]); 
+    const [chartList5, setChartList5] = useState([]); 
 
     useEffect(() => {
-        getChangeChart();
+        // const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
+        // // // setChartCoin(fiveTicker.map(data => data.name))
+        // chartCoin.push(fiveTicker.map(data => data.name))
+        // console.log("fiveTicker",fiveTicker)
+        getChangeChart1();
+        // getChangeChart2();
+        // getChangeChart3();
+        // getChangeChart4();
+        // getChangeChart5();
     }, []);
-
+    
     useEffect(() => {
 		getTopFiveTickers(tickerList)
 	}, [tickerList])
+
+    useEffect(() => {
+        // const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
+        // // // setChartCoin(fiveTicker.map(data => data.name))
+        // chartCoin.push(fiveTicker.map(data => data.name))
+        // console.log("fiveTicker",fiveTicker)
+        getChangeChart1();
+        // getChangeChart2();
+        // getChangeChart3();
+        // getChangeChart4();
+        // getChangeChart5();
+    }, []);
+    // console.log("chartCoin",chartCoin)
 
     useEffect(() => {
 		getTopFiveBtcTickers(btcTickerList)
@@ -48,7 +74,6 @@ const Top5Market = ( {tickerList} ) => {
     const getTopFiveTickers = ( tickerList ) => {
         // const fiveTicker = [...tickerList].sort((a,b) => Math.abs(b.fluctate_rate_24H) - Math.abs(a.fluctate_rate_24H)).splice(0, 5)
         const fiveTicker = [...tickerList].sort((a,b) => b.fluctate_rate_24H - a.fluctate_rate_24H).splice(0, 5)
-        console.log("fiveTicker",fiveTicker)
 		setTopFiveList(fiveTicker)
 	}
 
@@ -72,15 +97,72 @@ const Top5Market = ( {tickerList} ) => {
         }
     }
 
-    const getChangeChart = async() => {
+    const getChangeChart1 = async() => {
         try {
-            const orderCurrency = 'CSPR';
-            const paymentCurrency = 'KRW';
-            const chartIntervals = '24h';
-            const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
-            response.data.data.map((data) => (
-                chartList1.push(data[2])
-            ))
+                // const orderCurrency = topFiveList[0].name;
+                const orderCurrency = 'SIX';
+                const paymentCurrency = 'KRW';
+                const chartIntervals = '24h';
+                const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
+                response.data.data.map((data) => (
+                    chartList1.push(data[2])
+                ))
+        } catch (e) {
+            console.log("에러", e);
+        }
+    }
+
+    const getChangeChart2 = async() => {
+        try {
+                const orderCurrency = topFiveList[1].name;
+                const paymentCurrency = 'KRW';
+                const chartIntervals = '24h';
+                const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
+                response.data.data.map((data) => (
+                    chartList2.push(data[2])
+                ))
+        } catch (e) {
+            console.log("에러", e);
+        }
+    }
+
+    const getChangeChart3 = async() => {
+        try {
+                const orderCurrency = topFiveList[2].name;
+                const paymentCurrency = 'KRW';
+                const chartIntervals = '24h';
+                const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
+                response.data.data.map((data) => (
+                    chartList3.push(data[2])
+                ))
+        } catch (e) {
+            console.log("에러", e);
+        }
+    }
+
+    const getChangeChart4 = async() => {
+        try {
+                const orderCurrency = topFiveList[3].name;
+                const paymentCurrency = 'KRW';
+                const chartIntervals = '24h';
+                const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
+                response.data.data.map((data) => (
+                    chartList4.push(data[2])
+                ))
+        } catch (e) {
+            console.log("에러", e);
+        }
+    }
+
+    const getChangeChart5 = async() => {
+        try {
+                const orderCurrency = topFiveList[4].name;
+                const paymentCurrency = 'KRW';
+                const chartIntervals = '24h';
+                const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
+                response.data.data.map((data) => (
+                    chartList5.push(data[2])
+                ))
         } catch (e) {
             console.log("에러", e);
         }
@@ -117,11 +199,267 @@ const Top5Market = ( {tickerList} ) => {
         }],
     };
 
+    //미니차트
+    const data2 = {
+        width: '200px',
+        responsive: true,
+        labels: ["00:00","01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00","24:00"],
+        datasets: [{
+            data: chartList2,
+            fill: true,
+            borderColor: "#E9E9E9",
+            backgroundColor:"rgba(249, 249, 249, 0.7)",
+        }],
+    };
+
+    //미니차트
+    const data3 = {
+        width: '200px',
+        responsive: true,
+        labels: ["00:00","01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00","24:00"],
+        datasets: [{
+            data: chartList3,
+            fill: true,
+            borderColor: "#E9E9E9",
+            backgroundColor:"rgba(249, 249, 249, 0.7)",
+        }],
+    };
+
+    //미니차트
+    const data4 = {
+        width: '200px',
+        responsive: true,
+        labels: ["00:00","01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00","24:00"],
+        datasets: [{
+            data: chartList4,
+            fill: true,
+            borderColor: "#E9E9E9",
+            backgroundColor:"rgba(249, 249, 249, 0.7)",
+        }],
+    };
+
+    //미니차트
+    const data5 = {
+        width: '200px',
+        responsive: true,
+        labels: ["00:00","01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00","24:00"],
+        datasets: [{
+            data: chartList5,
+            fill: true,
+            borderColor: "#E9E9E9",
+            backgroundColor:"rgba(249, 249, 249, 0.7)",
+        }],
+    };
+
     function renderLine(data1) {   
         return (
             <>
                 <Line
                     data={data1} 
+                    options={{
+                        scales: {
+                            x: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                }
+                            },
+                            y: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                },
+                                gridLines: {
+                                    display:false,
+                                },
+                                borders:{
+                                    borderColor:"white"
+                                }
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false, 
+                            },
+                        },
+                        width: '200px',
+                        responsive: true,
+                    }}
+                />
+            </>
+        )
+    };
+
+    function renderLine(data2) {   
+        return (
+            <>
+                <Line
+                    data={data2} 
+                    options={{
+                        scales: {
+                            x: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                }
+                            },
+                            y: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                },
+                                gridLines: {
+                                    display:false,
+                                },
+                                borders:{
+                                    borderColor:"white"
+                                }
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false, 
+                            },
+                        },
+                        width: '200px',
+                        responsive: true,
+                    }}
+                />
+            </>
+        )
+    };
+
+    function renderLine(data3) {   
+        return (
+            <>
+                <Line
+                    data={data3} 
+                    options={{
+                        scales: {
+                            x: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                }
+                            },
+                            y: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                },
+                                gridLines: {
+                                    display:false,
+                                },
+                                borders:{
+                                    borderColor:"white"
+                                }
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false, 
+                            },
+                        },
+                        width: '200px',
+                        responsive: true,
+                    }}
+                />
+            </>
+        )
+    };
+
+    function renderLine(data4) {   
+        return (
+            <>
+                <Line
+                    data={data4} 
+                    options={{
+                        scales: {
+                            x: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                }
+                            },
+                            y: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
+                                },
+                                ticks: {
+                                    display:false 
+                                },
+                                gridLines: {
+                                    display:false,
+                                },
+                                borders:{
+                                    borderColor:"white"
+                                }
+                            },
+                        },
+                        plugins: {
+                            legend: {
+                                display: false, 
+                            },
+                        },
+                        width: '200px',
+                        responsive: true,
+                    }}
+                />
+            </>
+        )
+    };
+
+    function renderLine(data5) {   
+        return (
+            <>
+                <Line
+                    data={data5} 
                     options={{
                         scales: {
                             x: {
@@ -232,6 +570,9 @@ const Top5Market = ( {tickerList} ) => {
                                             </Box>
                                         </>
                                     )}
+                                    <Box ml="-10px" sx={{height:"116px",width:"220px"}}>
+                                        {renderLine( data1 )}
+                                    </Box>
                                 </Paper>
                             </Grid>
                         ))}
