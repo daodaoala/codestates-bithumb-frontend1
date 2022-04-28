@@ -74,6 +74,7 @@ const Market = () => {
     const [tickerList, setTickerList] = useState([]);           // api로 받아온 KRW 데이터 리스트 객체 -> 배열
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const searchRef = useRef();
     let history = useHistory();
 
     useEffect(() => {
@@ -177,6 +178,11 @@ const Market = () => {
         setPage(0);
     };  
 
+    const onReset = () => {
+        setSearch("");
+        searchRef.current.focus();
+    };
+
     // 유형에 따라 값 형식표시
     const getValue = (value, type) => {
         try {
@@ -204,7 +210,7 @@ const Market = () => {
                         <Box className={clsx('tab_market', value===4 && 'click_tab_market')} onClick={()=>setValue(4)}>즐겨찾기</Box>
                     </Box>
                     <Box className="tab-market-search">
-                        <Search>
+                        <Search className="flex">
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
@@ -212,8 +218,10 @@ const Market = () => {
                                 placeholder="검색"
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={(e)=>setSearch(e.target.value)}
+                                value={search}
+                                ref={searchRef}
                             />
-                            {/* <CancelIcon /> */}
+                            <CancelIcon style={{ color:"#848484", margin:"8px 0", fontSize:"20px", cursor:"pointer" }} onClick={()=>onReset()}/>
                         </Search>
                     </Box>
                 </Box>
@@ -224,7 +232,7 @@ const Market = () => {
                         <Box className={clsx('price_head', headValue===1 && 'click_price_head')} onClick={()=>setHeadValue(1)}>전체 {tickerList.length}</Box>
                         <Box className={clsx('price_head', headValue===2 && 'click_price_head')} onClick={()=>setHeadValue(2)}>메이저 10</Box>
                         <Box className={clsx('price_head', headValue===3 && 'click_price_head')} onClick={()=>setHeadValue(3)}>일반 178</Box>
-                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 4</Box>
+                        <Box className={clsx('price_head', headValue===4 && 'click_price_head')} onClick={()=>setHeadValue(4)}>신규 6</Box>
                         <Box className={clsx('price_head', headValue===5 && 'click_price_head')} onClick={()=>setHeadValue(5)}>투자유의 8</Box>
                     </Box>
                     <TableContainer className="scroll-head" sx={{ maxHeight: 700, maxWidth: 1200 }}>
