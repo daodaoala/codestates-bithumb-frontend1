@@ -141,19 +141,34 @@ const CoinInfo = () => {
                     data={data1} 
                     options={{
                         scales: {
-                            yAxes: {
+                            x: {
                                 grid: {
-                                    drawTicks: false
+                                  display: false,
+                                  drawOnChartArea:false
                                 },
                                 scaleLabel:{
                                     display: false
                                 },
-                                gridLines: {
-                                    display:false,
-                                    lineWidth:0
+                                ticks: {
+                                    display:true 
+                                }
+                            },
+                            y: {
+                                grid: {
+                                  display: false,
+                                  drawOnChartArea:false
+                                },
+                                scaleLabel:{
+                                    display: false
                                 },
                                 ticks: {
                                     display:false 
+                                },
+                                gridLines: {
+                                    display:false,
+                                },
+                                borders:{
+                                    borderColor:"white"
                                 }
                             },
                             
