@@ -91,7 +91,6 @@ const Market = () => {
         // console.log("list",list)
     }, [])
 
-    // console.log("setFavorites",favorites,favoriteIcon)
     useEffect(() => {
         getTickers();
         setInterval(() => {
@@ -363,7 +362,7 @@ const Market = () => {
                 )}
 
                 { value === 2 && (
-                    <BTCMarket tickerList={tickerList}/>
+                    <BTCMarket search={search}/>
                 )}
 
                 {/* 즐겨찾기 */}
@@ -401,9 +400,9 @@ const Market = () => {
                                 </TableHead>
                                 {favorites.length ? (
                                 <TableBody id="table_asset">
-                                        {favorites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    {favorites.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((data)=>( 
-                                       <>
+                                        <>
                                             <TableRow key="{data}">
                                                 <TableCell align="left" style={{ width: "4px"}} >
                                                     <StarIcon className={clsx(favoriteIcon.includes(data.name) ? 'click_star_icon' : 'star_icon')} onClick={()=>includeFavorites(data, data.name)}/>

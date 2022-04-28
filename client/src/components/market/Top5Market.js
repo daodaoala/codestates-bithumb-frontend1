@@ -73,7 +73,7 @@ const Top5Market = ( {tickerList} ) => {
     const getChangeChart = async() => {
         try {
                 // const orderCurrency = topFiveList[0].name;
-                const orderCurrency = 'STEEM';
+                const orderCurrency = 'GRT';
                 const paymentCurrency = 'KRW';
                 const chartIntervals = '24h';
                 const response = await axios.get(`https://api.bithumb.com/public/candlestick/${orderCurrency}_${paymentCurrency}/${chartIntervals}`);
@@ -111,8 +111,10 @@ const Top5Market = ( {tickerList} ) => {
         datasets: [{
             data: chartList1,
             fill: true,
-            borderColor: "#E9E9E9",
+            borderColor: "#c7c7c7",
             backgroundColor:"rgba(249, 249, 249, 0.7)",
+            borderWidth: 1,
+            lineTension: 1,
         }],
     };
 
@@ -158,6 +160,11 @@ const Top5Market = ( {tickerList} ) => {
                         plugins: {
                             legend: {
                                 display: false, 
+                            },
+                        },
+                        elements: {
+                            point:{
+                                radius: 0
                             },
                         },
                         width: '200px',

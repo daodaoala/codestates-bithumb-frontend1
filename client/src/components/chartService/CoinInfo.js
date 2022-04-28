@@ -130,7 +130,9 @@ const CoinInfo = () => {
             data: startPrice,
             fill: true,
             borderColor: "#8EB7F4",
+            borderRadius: 4,
             backgroundColor:"rgba(189, 213, 249, 0.7)",
+            borderWidth: 1,
         }],
     };
 
@@ -176,6 +178,11 @@ const CoinInfo = () => {
                         plugins: {
                             legend: {
                                 display: false, 
+                            },
+                        },
+                        elements: {
+                            point:{
+                                radius: 0
                             },
                         },
                         width: '360px',
